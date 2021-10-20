@@ -1,0 +1,270 @@
+<template>
+  <a-layout>
+    <a-form
+      :labelCol="{ span: 8 }"
+      :wrapperCol="{ span: 16 }"
+      class="ant-advanced-search-form"
+      :form="form"
+      @submit="handleSearch"
+    >
+      <a-row :gutter="24">
+        <a-col :md="20" :xs="24">
+          <a-row :gutter="24">
+            <a-col v-for="item in searchParams" :key="item.name" :md="8" :xs="24">
+              <a-form-item :label="item.label">
+                <a-cascader v-if="item.name == 'category'"
+                  v-decorator="[item.name]"
+                  :options="categories"
+                  :field-names="{ label: 'category_name', value: 'id', children: 'children' }"
+                  placeholder="请选择"
+                />
+                <!-- v-model="selectCategory" -->
+                  <!-- @change="handleCascaderChange" -->
+                <a-range-picker v-else-if="item.name == 'datepicker'"
+                  v-decorator="[
+                    'datepicker',
+                    {
+                      rules: [{ type: 'array'}]
+                    }
+                  ]"
+                  :placeholder="['开始日期','结束日期']"
+                />
+                <a-select v-else-if="item.name == 'banner_id'"
+                  v-decorator="[item.name]"
+                  :allowClear="true"
+                  :placeholder="item.label"
+                >
+                  <a-select-option v-for="item in banners" :key="item.id" :value="item.id">
+                    {{item.name}}
+                  </a-select-option>
+                </a-select>
+                <a-input v-else
+                  v-decorator="[
+                    item.name,
+                    {
+                      rules: [],
+                    },
+                  ]"
+                  :placeholder="item.label"
+                />
+              </a-form-item>
+            </a-col>
+          </a-row>
+        </a-col>
+
+        <a-col :md="4" :xs="24" :style="{ textAlign: 'right' }">
+          <a-button type="primary" html-type="submit"> 搜索 </a-button>
+          <a-button :style="{ marginLeft: '8px' }" @click="handleReset">
+            重置
+          </a-button>
+          <!-- <a :style="{ marginLeft: '8px', fontSize: '12px' }" @click="toggle">
+            Collapse <a-icon :type="expand ? 'up' : 'down'" />
+          </a> -->
+        </a-col>
+      </a-row>
+    </a-form>
+
+    <a-row :gutter="24" :style="{ padding: '0 16px 16px 16px' }">
+      <a-col :span="6">
+        <a-popconfirm
+          :title="'删除选中'+selectedKeys.length+'条?'"
+          ok-text="删除"
+          cancel-text="取消"
+          :disabled="selectedKeys.length<=0"
+          @confirm="handleDelete(selectedKeys)"
+        >
+          <a-button>删除</a-button>
+        </a-popconfirm>
+      </a-col>
+      <a-col :span="6" :offset="12" :style="{ textAlign: 'right' }">
+        <a-button @click="$router.push('bannerImage/save')">添加</a-button>
+      </a-col>
+    </a-row>
+
+    <a-spin :spinning="loading">
+      <a-table
+        :columns="columns"
+        :data-source="data"
+        rowKey="id"
+        :rowSelection="rowSelection"
+        :pagination="{total: totalRow, pageSize: pageSize}"
+        @change="tableChange"
+        :scroll="{x:1000}"
+      >
+        <span slot="status" slot-scope="item">
+          <span v-if="item.status == 1">已发布</span>
+          <span v-if="item.status == 0">未发布</span>
+        </span>
+        <span slot="image" slot-scope="item">
+          <div :style="{ width: '100px', height: '100px', background: '#eee' }">
+            <img :src="getImgUrl(item.image)" :style="{ width: '100%', height: '100%', objectFit: 'cover' }">
+          </div>
+        </span>
+        <span slot="action" slot-scope="item">
+          <a-button type="link" @click="$router.push('bannerImage/save?id='+item.id)">编辑</a-button>
+          <a-popconfirm
+            :title="'删除?'"
+            ok-text="删除"
+            cancel-text="取消"
+            @confirm="handleDelete([item.id])"
+          >
+            <a-button type="link">删除</a-button>
+          </a-popconfirm>
+        </span>
+      </a-table>
+    </a-spin>
+  </a-layout>
+</template>
+
+<script>
+import { list as banners } from "@/api/banner"
+import { list, deleteMany } from "@/api/bannerImage"
+
+export default {
+  data() {
+    return {
+      form: this.$form.createForm(this, { name: "advanced_search" }),
+      searchParams: [
+        {
+          name: "banner_id",
+          label: "所属banner",
+        }
+      ],
+      loading: false,
+      data: [],
+      columns: [
+        {
+          title: "图片",
+          key: "image",
+          scopedSlots: { customRender: "image" },
+        },
+        {
+          title: "所属banner",
+          dataIndex: "banner.name",
+        },
+        {
+          title: "标题",
+          dataIndex: "title",
+        },
+        {
+          title: "url",
+          dataIndex: "url",
+        },
+        {
+          title: "排序",
+          dataIndex: "sorting",
+        },
+        {
+          title: "状态",
+          key: "status",
+          scopedSlots: { customRender: "status" },
+        },
+        {
+          title: "创建时间",
+          dataIndex: "create_time",
+        },
+        {
+          title: "操作",
+          key: "action",
+          scopedSlots: { customRender: "action" },
+        },
+      ],
+      rowSelection: {
+        onChange: this.onTableSelectChange,
+      },
+      selectedKeys: [],
+      totalRow: 0,
+      pageSize: 20,
+      page: 1,
+      formValues: {},
+      banners: []
+    };
+  },
+  mounted() {
+    banners().then(res => {
+      this.banners = res
+    }).catch((err) => {
+      this.$message.error(err.msg ? err.msg : err.message);
+      if (err.code == 10001) {
+        this.$router.push("/login");
+        return;
+      }
+    })
+    this.refreshList();
+  },
+  methods: {
+    handleSearch(e) {
+      e.preventDefault();
+      this.form.validateFields((error, values) => {
+        console.log("error", error);
+        console.log("Received values of form: ", values);
+        if (!error) {
+          if (values.datepicker) {
+            values.start_time = values.datepicker[0].format("YYYY-MM-DD");
+            values.end_time = values.datepicker[1].format("YYYY-MM-DD");
+          }
+
+          this.page = 1
+          this.formValues = values
+          this.refreshList()
+        }
+      });
+    },
+    handleReset() {
+      this.form.resetFields();
+    },
+    refreshList() {
+      this.loading = true;
+      let params = Object.assign({}, this.formValues)
+      params.page = this.page
+      params.page_size = this.pageSize
+      list(params)
+        .then((res) => {
+          console.log(res);
+          // this.data = res
+          this.data = res.data;
+          this.totalRow = res.total
+        })
+        .catch((err) => {
+          this.$message.error(err.msg ? err.msg : err.message);
+          if (err.code == 10001) {
+            this.$router.push("/login");
+            return;
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    onTableSelectChange(selectedKeys, selectedRows) {
+      console.log(selectedKeys, selectedRows);
+      this.selectedKeys = selectedKeys;
+    },
+    handleDelete(ids) {
+      console.log(ids)
+      deleteMany({
+        ids: ids.join(',')
+      }).then(res => {
+        if (res.data) this.$message.success('删除成功')
+        this.refreshList()
+      }).catch(err => {
+        this.$message.error(err.msg ? err.msg : err.message)
+        if (err.code == 10001) {
+          this.$router.push('/login')
+          return
+        }
+      })
+    },
+    tableChange(p) {
+      this.page = p.current
+      this.refreshList()
+    },
+    getImgUrl(url) {
+      return process.env.VUE_APP_API_BASE_URL + 'storage/' + url
+    },
+  },
+};
+</script>
+
+<style>
+</style>
