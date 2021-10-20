@@ -30,9 +30,10 @@
 
 ## 运行
 
-- 后端
+### 后端
 
-1. 复制`./backend/.example.env`到`./backend/.env`文件，根据您的实际情况修改数据库参数。可参考[ThinkPHP6.0手册-环境变量定义](http://static.kancloud.cn/manual/thinkphp6_0/1037484)
+1. 复制`./backend/.example.env`到`./backend/.env`文件，根据您的实际情况修改数据库参数。
+> 可参考[ThinkPHP6.0手册-环境变量定义](http://static.kancloud.cn/manual/thinkphp6_0/1037484)
 
 2. 运行
 ```
@@ -43,9 +44,10 @@ php think run 或者搭建php-fpm环境
 
 3. API地址默认是`http://localhost:8000/`
 
-- 管理后台
+### 管理后台
 
-1. 复制`./dashoard/.env.production`到`./dashoard/.env.development.local`文件。可根据后端实际运行情况修改`VUE_APP_API_BASE_URL`。`yarn serve`运行时会读取`.env.development.local`，`yarn build`打包时会读取`.env.production`。
+1. 复制`./dashoard/.env.production`到`./dashoard/.env.development.local`文件。可根据后端实际运行情况修改`VUE_APP_API_BASE_URL`。
+> `yarn serve`运行时会读取`.env.development.local`，`yarn build`打包时会读取`.env.production`。
 
 2. 运行
 ```
@@ -57,7 +59,7 @@ yarn build 或者 npm run build
 
 3. `yarn serve`运行后，浏览器打开`http://localhost:8080`。账号admin，密码123456，可自行在数据库修改，方法是`md5(md5($authCode.$password))`。
 
-- 微信小程序客户端
+### 微信小程序客户端
 
 1.  复制`./client/manifest.example.json`到`./client/manifest.json`文件。参考[uni-app配置项列表](https://uniapp.dcloud.io/collocation/manifest)，根据需要修改。
 2. 打开HBuilderX，导入项目`./client`。
