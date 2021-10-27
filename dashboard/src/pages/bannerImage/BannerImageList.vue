@@ -87,7 +87,7 @@
         :data-source="data"
         rowKey="id"
         :rowSelection="rowSelection"
-        :pagination="{total: totalRow, pageSize: pageSize}"
+        :pagination="{current:page, total: totalRow, pageSize: pageSize}"
         @change="tableChange"
         :scroll="{x:1000}"
       >

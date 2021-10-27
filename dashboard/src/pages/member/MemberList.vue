@@ -82,7 +82,7 @@
         :columns="columns"
         :data-source="data"
         rowKey="id"
-        :pagination="{total: totalRow, pageSize: pageSize}"
+        :pagination="{current:page, total: totalRow, pageSize: pageSize}"
         @change="tableChange"
         :scroll="{x:800}"
       >

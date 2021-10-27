@@ -83,7 +83,7 @@
         :columns="columns"
         :data-source="data"
         rowKey="id"
-        :pagination="{total: totalRow, pageSize: pageSize}"
+        :pagination="{current:page, total: totalRow, pageSize: pageSize}"
         @change="tableChange"
       >
         <span slot="status" slot-scope="item">
