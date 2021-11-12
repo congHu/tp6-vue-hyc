@@ -65,8 +65,10 @@ class BannerImage extends BaseController
     {
         $ids = $this->request->param('ids');
 
-        $idArray = explode(',', $ids);
+        if (empty($ids) || !is_array($ids)) {
+            return error();
+        }
 
-        return success(ModelBannerImage::destroy($idArray));
+        return success(ModelBannerImage::destroy($ids));
     }
 }

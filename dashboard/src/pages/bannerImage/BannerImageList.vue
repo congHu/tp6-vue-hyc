@@ -260,7 +260,7 @@ export default {
       this.refreshList()
     },
     getImgUrl(url) {
-      return process.env.VUE_APP_API_BASE_URL + 'storage/' + url
+      return process.env.VUE_APP_API_BASE_URL + url
     },
   },
 };

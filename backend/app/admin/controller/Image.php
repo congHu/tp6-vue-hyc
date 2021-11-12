@@ -22,7 +22,7 @@ class Image extends BaseController
             $savename = \think\facade\Filesystem::disk('public')->putFile('', $files['file'], time());
             $savename = str_replace("\\", '/', $savename);
             $model = new ModelImage();
-            $model->url = $savename;
+            $model->url = '/storage'.'/'.$savename;
             $model->save();
             return success($model);
         } catch (\Exception $e) {
@@ -41,18 +41,20 @@ class Image extends BaseController
     {
         $ids = $this->request->param('ids');
 
-        $idArray = explode(',', $ids);
+        if (empty($ids) || !is_array($ids)) {
+            return error();
+        }
 
-        $list = ModelImage::whereIn('id', $idArray)->select()->toArray();
+        $list = ModelImage::whereIn('id', $ids)->select()->toArray();
 
         foreach ($list as $model) {
             try {
-                unlink(app()->getRootPath() . 'public/storage/' . $model['url']);
+                unlink(app()->getRootPath() . 'public/' . $model['url']);
             } catch (\Exception $ex) {
                 // return error($ex->getMessage());
             }
         }
         
-        return success(ModelImage::destroy($idArray));
+        return success(ModelImage::destroy($ids));
     }
 }

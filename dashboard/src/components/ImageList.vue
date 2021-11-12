@@ -121,7 +121,7 @@ export default {
     //   this.$emit('change', this.imageList);
     // },
     getImgUrl(url) {
-      return process.env.VUE_APP_API_BASE_URL + 'storage/' + url
+      return process.env.VUE_APP_API_BASE_URL + url
     },
     handleDelete(index) {
       const toDelete = this.imageList[index]
@@ -158,7 +158,7 @@ export default {
     },
     handleImageDelete(id) {
       deleteMany({
-        ids: [id].join(',')
+        ids: [id]
       }).then(res => {
         if (res.data) this.$message.success('删除成功')
         this.refreshList()
