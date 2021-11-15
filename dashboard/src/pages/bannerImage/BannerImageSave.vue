@@ -11,7 +11,7 @@
       </a-form-model-item>
       
       <a-form-model-item label="图片" prop="image">
-        <image-list v-model="images" :max="1" @change="imageChange" />
+        <image-list v-model="images" :max="1" />
       </a-form-model-item>
       <a-form-model-item label="标题">
         <a-input v-model="form.title" />
@@ -122,7 +122,7 @@ export default {
           if (this.$route.query.id) {
             data.id = this.$route.query.id
           }
-          data.image_id = this.images[0]
+          data.logo = this.images.length > 0 ? this.images[0] : ''
 
           this.saving = true
           save(data).then(() => {
@@ -145,10 +145,6 @@ export default {
       });
 
     },
-    imageChange() {
-      this.form.image = this.images[0]
-      
-    }
   },
 }
 </script>
