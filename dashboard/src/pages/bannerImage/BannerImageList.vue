@@ -243,7 +243,7 @@ export default {
     handleDelete(ids) {
       console.log(ids)
       deleteMany({
-        ids: ids.join(',')
+        ids
       }).then(res => {
         if (res.data) this.$message.success('删除成功')
         this.refreshList()
