@@ -12,6 +12,6 @@ class User extends Validate
     ];
 
     protected $scene = [
-        'wxlogin' => ['code','encrypted_data','iv'],
+        'mplogin' => ['code','encrypted_data','iv'],
     ];
 }
