@@ -76,7 +76,7 @@ const routeView = {
   'bannerImage/save': BannerImageSave,
 }
 
-import { API_TOKEN_STRAGE_KEY } from '@/api/request'
+import { API_TOKEN_STORAGE_KEY } from '@/api/request'
 
 export default {
   data() {
@@ -162,7 +162,7 @@ export default {
   },
   methods: {
     logout() {
-      localStorage.removeItem(API_TOKEN_STRAGE_KEY)
+      localStorage.removeItem(API_TOKEN_STORAGE_KEY)
       // this.$router.push('/login')
       window.location.reload()
     },

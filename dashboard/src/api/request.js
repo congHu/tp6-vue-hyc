@@ -1,11 +1,11 @@
 import axios from "axios"
 
-export const API_TOKEN_STRAGE_KEY = 'lijipeisong_admin_token'
+export const API_TOKEN_STORAGE_KEY = 'storaged_tp6_api_token'
 
 export default function (config) {
   return new Promise((resolve, reject) => {
     config.baseURL = process.env.VUE_APP_API_BASE_URL
-    const token = localStorage.getItem(API_TOKEN_STRAGE_KEY)
+    const token = localStorage.getItem(API_TOKEN_STORAGE_KEY)
     if (!token) {
       reject({code:10001,msg:'登录校验失败'})
     }

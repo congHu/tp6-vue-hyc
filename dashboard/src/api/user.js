@@ -1,5 +1,5 @@
 import axios from "axios"
-import { API_TOKEN_STRAGE_KEY } from './request'
+import { API_TOKEN_STORAGE_KEY } from './request'
 
 export function login(data) {
   return new Promise((resolve, reject) => {
@@ -14,7 +14,7 @@ export function login(data) {
     }).then(resp => {
       if (resp.data) {
         if (resp.data.code == 1) {
-          localStorage.setItem(API_TOKEN_STRAGE_KEY, resp.data.data)
+          localStorage.setItem(API_TOKEN_STORAGE_KEY, resp.data.data)
           resolve(resp.data.data)
         } else {
           reject(resp.data)
@@ -31,7 +31,7 @@ export function login(data) {
 
 export function profile() {
   return new Promise((resolve, reject) => {
-    const token = localStorage.getItem(API_TOKEN_STRAGE_KEY)
+    const token = localStorage.getItem(API_TOKEN_STORAGE_KEY)
     if (!token) {
       reject({code:10001,msg:'登录校验失败'})
     }

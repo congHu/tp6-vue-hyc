@@ -8,7 +8,7 @@
 
 <script>
 import zhCN from 'ant-design-vue/lib/locale-provider/zh_CN';
-import { API_TOKEN_STRAGE_KEY } from '@/api/request'
+import { API_TOKEN_STORAGE_KEY } from '@/api/request'
 
 export default {
   name: 'App',
@@ -20,7 +20,7 @@ export default {
     };
   },
   beforeCreate() {
-    if (!localStorage.getItem(API_TOKEN_STRAGE_KEY)) {
+    if (!localStorage.getItem(API_TOKEN_STORAGE_KEY)) {
       this.$router.push('/login')
       return
     }

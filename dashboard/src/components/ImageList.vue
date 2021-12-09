@@ -73,7 +73,7 @@
 
 <script>
 import { list, deleteMany } from '@/api/image'
-import { API_TOKEN_STRAGE_KEY } from '@/api/request'
+import { API_TOKEN_STORAGE_KEY } from '@/api/request'
 
 export default {
   name: 'ImageList',
@@ -110,7 +110,7 @@ export default {
       pageSize: 19,
       uploadAction: process.env.VUE_APP_API_BASE_URL + 'admin/image/upload',
       uploadHeader: {
-        Authorization: localStorage.getItem(API_TOKEN_STRAGE_KEY)
+        Authorization: localStorage.getItem(API_TOKEN_STORAGE_KEY)
       },
       uploading: false,
       isCompressImage: false
