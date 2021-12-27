@@ -1,8 +1,9 @@
 <template>
-  <a-layout id="components-layout-demo-fixed-sider">
-    <a-layout-sider :style="{ overflow: 'hidden', height: '100vh', position: 'fixed', left: 0 }" v-model="collapsed" collapsible>
+  <a-layout class="main">
+    <!-- :style="{ overflow: 'hidden', height: '100vh', position: 'fixed', left: 0 }" -->
+    <a-layout-sider class="sider"  v-model="collapsed" collapsible>
       <div class="logo">管理后台</div>
-      <a-menu theme="dark" mode="inline" :selected-keys="[$route.path]" :open-keys="currentGroup">
+      <a-menu class="menu" theme="dark" mode="inline" :selected-keys="[$route.path]" :open-keys="currentGroup">
         <a-sub-menu v-for="group in Object.keys(navigateGroups)" :key="group" @titleClick="groupClick(group)" class="menu-group">
           <span slot="title">{{group}}</span>
           <a-menu-item v-for="item in navigateGroups[group]" :key="item.path" @click="menuItemClick(item)">
@@ -13,7 +14,8 @@
         
       </a-menu>
     </a-layout-sider>
-    <a-layout :style="{ marginLeft: (collapsed ? 80 : 200) + 'px' }">
+    <!-- :style="{ marginLeft: (collapsed ? 80 : 200) + 'px' }"  -->
+    <a-layout style="flex:1;display:flex;flex-direction:column">
       <a-affix :offset-top="0">
         <a-layout-header theme="dark" :style="{ display: 'flex' }">
           <div :style="{ flex: 1 }"></div>
@@ -36,7 +38,8 @@
           </template>
         </a-breadcrumb>
       </a-affix>
-      <a-layout-content :style="{ overflow: 'initial' }">
+      <!-- :style="{ overflow: 'initial' }"  -->
+      <a-layout-content :style="{ flex: 1, overflow: 'scroll' }">
         <keep-alive>
           <router-view v-if="$route.meta.keepAlive" class="router-view"></router-view>
         </keep-alive>
@@ -234,6 +237,37 @@ export default {
 </script>
 
 <style>
+.main {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+.sider {
+  
+}
+.ant-layout-sider-children {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  height: 100%;
+}
+.sider .logo {
+  height: 32px;
+  /* background: rgba(255, 255, 255, 0.2); */
+  margin: 16px;
+  font-size: 24px;
+  color: white;
+  overflow: hidden;
+}
+.sider .menu {
+  flex: 1;
+  overflow-y: scroll;
+  height: 100%;
+}
+.menu::-webkit-scrollbar {
+  display: none;
+}
+
 #components-layout-demo-fixed-sider .logo {
   height: 32px;
   /* background: rgba(255, 255, 255, 0.2); */
