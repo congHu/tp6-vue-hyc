@@ -11,7 +11,7 @@
       </a-form-model-item>
       
       <a-form-model-item label="图片" prop="image">
-        <image-list v-model="images" :max="1" />
+        <image-list v-model="images" :max="1" @change="imgChange" />
       </a-form-model-item>
       <a-form-model-item label="标题">
         <a-input v-model="form.title" />
@@ -145,6 +145,9 @@ export default {
       });
 
     },
+    imgChange() {
+      this.form.image = this.images.length > 0 ? this.images[0] : ''
+    }
   },
 }
 </script>
